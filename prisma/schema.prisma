@@ -8,4 +8,82 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+
 }
+
+model Feed{
+ id String @id
+ name String
+ url String @unique 
+ author User? @relation("FeedAuthor",fields: [authorId],references: [id])
+ savedArticles SavedArticle[]
+ authorId String?
+ tags FeedTag[]
+ likes User[] @relation("FeedUserLikes")
+}
+
+model Bundle{
+  id String @id
+  name String
+  description String
+ author User? @relation("BundleAuthor",fields:[authorId],references:[id])
+ authorId String?
+ likes User[] @relation("BundleUserLikes")
+ tags BundleTag[]
+}
+
+
+model User {
+  id        String   @id @default(uuid())
+  auth0 String @unique
+  nickname String?
+  createdAt DateTime @default(now())
+  feeds Feed[] @relation("FeedAuthor")
+  bundles Bundle[] @relation("BundleAuthor")
+  updatedAt DateTime @updatedAt
+  feedLikes Feed[] @relation("FeedUserLikes")
+  bundleLikes Bundle[] @relation("BundleUserLikes")
+  email     String?  @unique
+  image     String?
+  role      Role     @default(USER)
+  bookmarks Link[]
+  savedArticles SavedArticle[]
+}
+
+model SavedArticle{
+  id String @id
+  content Json
+  feed Feed? @relation(fields: [feedId],references: [id])
+  feedId String? 
+  author User? @relation(fields:[authorId],references:[id])
+  authorId String?
+}
+model BundleTag{
+  id String @id
+  name String @unique
+  bundles Bundle[]
+}
+model FeedTag{
+  id String @id
+  name String @unique
+  feeds Feed[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Link {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  title       String
+  description String
+  url         String
+  imageUrl    String
+  category    String
+  users       User[]
+}
+
