@@ -7,14 +7,28 @@
     "build": "next build",
     "start": "next start",
     "prisma:init": "prisma init",
-    "prisma:migrate":"prisma migrate dev", 
+    "prisma:migrate": "prisma migrate dev",
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "@auth0/nextjs-auth0": "^1.9.1",
     "@prisma/client": "^4.0.0",
+    "@types/lodash": "^4.14.182",
+    "@types/uuid": "^8.3.4",
+    "apollo-server-micro": "^3.9.0",
+    "dotenv": "^16.0.1",
+    "graphql": "^16.5.0",
+    "graphql-middleware": "6.0.9",
+    "graphql-shield": "^7.5.0",
+    "graphql-tools": "^8.3.0",
+    "lodash": "^4.17.21",
+    "micro": "^9.3.4",
+    "micro-cors": "^0.1.1",
     "next": "12.2.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/node": "18.0.3",
