@@ -13,11 +13,13 @@ export const resolvers = {
     ...createFieldResolver('feed', 'author'),
     ...createFieldResolver('feed', 'tags'),
     ...createFieldResolver('feed', 'bundles'),
+    ...createFieldResolver('feed', 'likes'),
   },
   Bundle: {
     ...createFieldResolver('bundle', 'author'),
     ...createFieldResolver('bundle', 'tags'),
     ...createFieldResolver('bundle', 'feeds'),
+    ...createFieldResolver('bundle', 'likes'),
   },
   BundleTag: {
     ...createFieldResolver('bundleTag', 'bundles'),
@@ -33,6 +35,12 @@ export const resolvers = {
     bundle: (parent, { data: { id } }, { prisma }) =>
       prisma.bundle.findUnique({ where: { id } }),
     bundles: (parent, args, { prisma }) => prisma.bundle.findMany(),
+    findFeedTags: (parent, { data }, { prisma }) =>
+      prisma.feedTag.findMany({ where: { name: { contains: data.search } } }),
+    findBundleTags: (parent, { data }, { prisma }) =>
+      prisma.bundleTag.findMany({ where: { name: { contains: data.search } } }),
+    findFeeds: (parent, { data }, { prisma }) =>
+      prisma.feed.findMany({ where: { name: { contains: data.search } } }),
   },
   Mutation: {
     createFeed: async (parent, { data }, { prisma, user }) => {
@@ -46,6 +54,22 @@ export const resolvers = {
         data: { ...data, ...author },
       });
       return result;
+    },
+    likeBundle: (parent, { data }, { prisma, user }) => {
+      const { bundleId, likeState } = data;
+      const connectState = likeState ? 'connect' : 'disconnect';
+      return prisma.bundle.update({
+        where: { id: bundleId },
+        data: { likes: { [connectState]: { id: user.id } } },
+      });
+    },
+    likeFeed: (parent, { data }, { prisma, user }) => {
+      const { feedId, likeState } = data;
+      const connectState = likeState ? 'connect' : 'disconnect';
+      return prisma.feed.update({
+        where: { id: feedId },
+        data: { likes: { [connectState]: { id: user.id } } },
+      });
     },
   },
 };

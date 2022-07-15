@@ -1,5 +1,5 @@
-import { context } from './../../utils/api/context';
-import { permissions } from './../../utils/api/permissions';
+import { context } from '../../utils/api/context';
+import { permissions } from '../../utils/api/permissions';
 import { ApolloServer } from "apollo-server-micro";
 import { makeExecutableSchema } from "graphql-tools";
 import { typeDefs } from "../../utils/api/typeDefs";
