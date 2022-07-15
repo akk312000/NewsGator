@@ -1,3 +1,5 @@
+import { verifyOwnership } from "./verifyOwnership";
+
 const createFieldResolver = (modelName, parName) => ({
   [parName]: async ({ id }, args, { prisma }) => {
     const modelResponse = await prisma[modelName].findUnique({
@@ -10,25 +12,25 @@ const createFieldResolver = (modelName, parName) => ({
 
 export const resolvers = {
   Feed: {
-    ...createFieldResolver('feed', 'author'),
-    ...createFieldResolver('feed', 'tags'),
-    ...createFieldResolver('feed', 'bundles'),
-    ...createFieldResolver('feed', 'likes'),
+    ...createFieldResolver("feed", "author"),
+    ...createFieldResolver("feed", "tags"),
+    ...createFieldResolver("feed", "bundles"),
+    ...createFieldResolver("feed", "likes"),
   },
   Bundle: {
-    ...createFieldResolver('bundle', 'author'),
-    ...createFieldResolver('bundle', 'tags'),
-    ...createFieldResolver('bundle', 'feeds'),
-    ...createFieldResolver('bundle', 'likes'),
+    ...createFieldResolver("bundle", "author"),
+    ...createFieldResolver("bundle", "tags"),
+    ...createFieldResolver("bundle", "feeds"),
+    ...createFieldResolver("bundle", "likes"),
   },
   BundleTag: {
-    ...createFieldResolver('bundleTag', 'bundles'),
+    ...createFieldResolver("bundleTag", "bundles"),
   },
   FeedTag: {
-    ...createFieldResolver('feedTag', 'feeds'),
+    ...createFieldResolver("feedTag", "feeds"),
   },
   Query: {
-    hello: (parent, args, context) => 'hi!',
+    hello: (parent, args, context) => "hi!",
     feed: (parent, { data: { id } }, { prisma }) =>
       prisma.feed.findUnique({ where: { id } }),
     feeds: (parent, args, { prisma }) => prisma.feed.findMany(),
@@ -57,7 +59,7 @@ export const resolvers = {
     },
     likeBundle: (parent, { data }, { prisma, user }) => {
       const { bundleId, likeState } = data;
-      const connectState = likeState ? 'connect' : 'disconnect';
+      const connectState = likeState ? "connect" : "disconnect";
       return prisma.bundle.update({
         where: { id: bundleId },
         data: { likes: { [connectState]: { id: user.id } } },
@@ -65,11 +67,35 @@ export const resolvers = {
     },
     likeFeed: (parent, { data }, { prisma, user }) => {
       const { feedId, likeState } = data;
-      const connectState = likeState ? 'connect' : 'disconnect';
+      const connectState = likeState ? "connect" : "disconnect";
       return prisma.feed.update({
         where: { id: feedId },
         data: { likes: { [connectState]: { id: user.id } } },
       });
+    },
+    updateFeed: async (
+      parent,
+      { data: { id, ...feedUpdate } },
+      { prisma, user }
+    ) => {
+      const feed = await prisma.feed.findUnique({
+        where: { id },
+        include: { author: true },
+      });
+      await verifyOwnership(feed, user);
+      return prisma.feed.update({ where: { id }, data: { ...feedUpdate } });
+    },
+    updateBundle: async (
+      parent,
+      { data: { id, ...bundleUpdate } },
+      { prisma, user }
+    ) => {
+      const bundle = await prisma.bundle.findUnique({
+        where: { id },
+        include: { author: true },
+      });
+      await verifyOwnership(bundle, user);
+      return prisma.bundle.update({ where: { id }, data: { ...bundleUpdate } });
     },
   },
 };
