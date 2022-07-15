@@ -5,7 +5,6 @@ import { prisma } from "./../prisma";
 export const context = async ({ req, res }) => {
   try {
     // const { user: auth0User } = await auth0.getSession(req, res);
-	const auth0User={nickname:'faker',sub:"1",image:"/blank.png"}
     let user = await prisma.user.findUnique({
       where: { auth0: auth0User.sub },
     });
