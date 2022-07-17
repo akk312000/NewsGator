@@ -17,6 +17,7 @@
     "@types/lodash": "^4.14.182",
     "@types/uuid": "^8.3.4",
     "apollo-server-micro": "^3.9.0",
+    "autoprefixer": "^10.4.7",
     "dotenv": "^16.0.1",
     "graphql": "^16.5.0",
     "graphql-middleware": "6.0.9",
@@ -26,8 +27,10 @@
     "micro": "^9.3.4",
     "micro-cors": "^0.1.1",
     "next": "12.2.1",
+    "postcss": "^8.4.14",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "tailwindcss": "^3.1.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
