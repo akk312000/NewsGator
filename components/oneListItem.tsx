@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import { Dispatch, SetStateAction } from 'react';
 import {
+	ActionType,
+	BadgeFieldName,
   BundleObject,
   FeedObject,
   ItemType,
   SelectedFeedState,
 } from '../utils/types';
 import { ChevronDoubleDownIcon, ChevronDoubleRightIcon } from '@heroicons/react/outline'
+import { BadgeList } from './badgeList';
 export const OneListItem = ({
   item,
   type,
@@ -15,14 +18,14 @@ export const OneListItem = ({
   useSelected = false,
   allowEdits = false,
 }
-// 	: {
-//   item: FeedObject | BundleObject;
-//   type: ItemType;
-//   selected?: SelectedFeedState;
-//   setSelected?: Dispatch<SetStateAction<SelectedFeedState>>;
-//   useSelected: boolean;
-//   allowEdits: boolean;
-// }
+	: {
+  item: FeedObject | BundleObject;
+  type: ItemType;
+  selected?: SelectedFeedState;
+  setSelected?: Dispatch<SetStateAction<SelectedFeedState>>;
+  useSelected: boolean;
+  allowEdits: boolean;
+}
 ) => {
   const isFeed = type === ItemType.FeedType;
   const isSelected = useSelected && selected && selected.id === item.id;
@@ -58,13 +61,23 @@ export const OneListItem = ({
           <div className="col-span-6 py-2">
             <h3>Tags</h3>
             <div className="grid grid-cols-3 gap-2">
-              <p>tags...</p>
+ <BadgeList
+                fieldName={BadgeFieldName.tags}
+                action={ActionType.NONE}
+                item={item}
+              />
             </div>
           </div>
           <div className="col-span-6 py-2">
             <h3>{isFeed ? 'Bundles' : 'Feeds'}</h3>
             <div className="grid grid-cols-3 gap-2">
-              <p>child items...</p>
+ <BadgeList
+                fieldName={
+                  isFeed ? BadgeFieldName.bundles : BadgeFieldName.feeds
+                }
+                action={ActionType.NONE}
+                item={item}
+				/>
             </div>
           </div>
         </div>
@@ -95,7 +108,7 @@ export const OneListItem = ({
                   });
                 }}
                 className={`flex rounded-lg rounded-t-none align-middle
-     ${isSelected ? `bg-${isFeed ? 'green' : 'purple'}-400` : `bg-gray-300`}
+     bg-green-400
      p-4 z-10 text-hite cursor-pointer
      `}
               >
