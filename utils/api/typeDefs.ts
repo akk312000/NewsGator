@@ -26,7 +26,7 @@ export const typeDefs = gql`
     id: String
     auth0: String
     nickname: String
-    picture: String
+    image: String
     bundles: [Bundle]
     feeds: [Feed]
     feedLikes: [Feed]

@@ -8,11 +8,12 @@ const {
   AUTH0_CLIENT_SECRET,
   AUTH0_SCOPE,
   AUTH0_COOKIE,
+  NEXT_PUBLIC_BACKEND_ADDRESS,
   BACKEND_ADDRESS
 } = process.env;
 module.exports = {
   publicRuntimeConfig:{
-    BACKEND_URL:`${BACKEND_ADDRESS}/api/graphql`
+    BACKEND_URL:`${NEXT_PUBLIC_BACKEND_ADDRESS}/api/graphql`
   }
   ,
   serverRuntimeConfig:{
